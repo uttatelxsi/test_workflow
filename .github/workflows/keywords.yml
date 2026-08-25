@@ -137,7 +137,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
 # Calls another workflow instead of defining steps
-    uses: my-org/shared-workflows/.github/workflows/deploy.yml@main
+    uses: my-org/shared-workflows/.github/workflows/blank.yml@main
 
 # Pass parameters to reusable workflow
     with:
