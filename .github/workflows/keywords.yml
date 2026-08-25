@@ -5,32 +5,32 @@ name: Educational GitHub Actions Workflow
 # -----------------------------------------------------------------------------
 on:
 # Trigger when a Pull Request is opened, updated, or reopened
-pull_request:
-branches:
-- main
+  pull_request:
+  branches:
+    - main
 # Allow users to manually run the workflow from GitHub Actions tab
-workflow_dispatch:
-inputs:
-environment:
-description: "Choose the deployment environment"
-required: true
-default: "dev"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Choose the deployment environment"
+        required: true
+        default: "dev"
 # Allow this workflow to be called by another workflow
-workflow_call:
-inputs:
-app-name:
-description: "Application name passed from caller workflow"
-required: true
-type: string
+  workflow_call:
+    inputs:
+      app-name:
+      description: "Application name passed from caller workflow"
+      required: true
+      type: string
 # -----------------------------------------------------------------------------
 # Concurrency
 # Prevents multiple runs of the same workflow on the same branch
 # -----------------------------------------------------------------------------
 concurrency:
 # Creates a unique group using workflow name and branch/reference
-group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
 # Cancels older running workflow if a new one starts
-cancel-in-progress: true
+  cancel-in-progress: true
 # -----------------------------------------------------------------------------
 # Jobs Section
 # Jobs run in parallel unless dependencies are defined with "needs"
