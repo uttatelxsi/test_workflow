@@ -1,36 +1,35 @@
-# Name displayed in the GitHub Actions UI
 name: Educational GitHub Actions Workflow
 # -----------------------------------------------------------------------------
 # Workflow Triggers
 # -----------------------------------------------------------------------------
 on:
 # Trigger when a Pull Request is opened, updated, or reopened
-pull_request:
-branches:
-- main
+  pull_request:
+    branches:
+    - main
 # Allow users to manually run the workflow from GitHub Actions tab
-workflow_dispatch:
-inputs:
-environment:
-description: "Choose the deployment environment"
-required: true
-default: "dev"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Choose the deployment environment"
+        required: true
+        default: "dev"
 # Allow this workflow to be called by another workflow
-workflow_call:
-inputs:
-app-name:
-description: "Application name passed from caller workflow"
-required: true
-type: string
+  workflow_call:
+    inputs:
+      app-name:
+        description: "Application name passed from caller workflow"
+        required: true
+        type: string
 # -----------------------------------------------------------------------------
 # Concurrency
 # Prevents multiple runs of the same workflow on the same branch
 # -----------------------------------------------------------------------------
 concurrency:
 # Creates a unique group using workflow name and branch/reference
-group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
 # Cancels older running workflow if a new one starts
-cancel-in-progress: true
+  cancel-in-progress: true
 # -----------------------------------------------------------------------------
 # Jobs Section
 # Jobs run in parallel unless dependencies are defined with "needs"
@@ -39,96 +38,87 @@ jobs:
 # ===========================================================================
 # BUILD JOB
 # ===========================================================================
-build:
+  build:
 # Friendly name shown in GitHub Actions UI
-name: Build Application
+    name: Build Application
 # Runner (virtual machine) used to execute the job
-runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 # Matrix strategy allows running the same job multiple times
-strategy:
-matrix:
+    strategy:
+      matrix:
 # Run build using Node.js version 18 and 20
-node-version: [18, 20]
+        node-version: [18, 20]
 # Steps executed sequentially
-steps:
-# Step 1: Checkout repository code
-- name: Checkout Repository
-uses: actions/checkout@v4
-# Step 2: Install selected Node.js version
-- name: Setup Node.js
-uses: actions/setup-node@v4
-# Provide input parameter to the actio
-with:
-node-version: ${{ matrix.node-version }}
+    steps:
+    # Step 1: Checkout repository code
+     - name: Checkout Repository
+       uses: actions/checkout@v4
+      # Step 2: Install selected Node.js version
+     - name: Setup Node.js
+       uses: actions/setup-node@v4
+# Provide input parameter to the action
+       with:
+         node-version: ${{ matrix.node-version }}
 # Step 3: Verify Node.js installation
-
-- name: Display Node Version
-run: node --version
+     - name: Display Node Version
+       run: node --version
 
 # Step 4: Print educational message
-- name: Build Simulation
-run: |
-echo "Building application..."
-echo "Build completed successfully."
+     - name: Build Simulation
+       run: |
+        echo "Building application..."
+        echo "Build completed successfully."
 
 # ===========================================================================
 # TEST JOB
 # Executes only after BUILD succeeds
 # ===========================================================================
-test:
-
-name: Test Application
-
-runs-on: ubuntu-latest
-
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
 # Dependency:
 # Test job starts only when build job is successful
-needs: build
-
-strategy:
-matrix:
-
+    #needs: build
+    strategy:
+      matrix:
 # Demonstrates matrix execution
-test-type: [unit, integration]
+        test-type: [unit, integration]
 
-steps:
-
+    steps:
 # Checkout source code
-- name: Checkout Repository
-uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
 # Display matrix value
-- name: Show Test Type
-run: echo "Running ${{ matrix.test-type }} tests"
+      - name: Show Test Type
+        run: echo "Running ${{ matrix.test-type }} tests"
 # Simulate tests
-- name: Execute Tests
-run: |
-echo "Executing tests..."
-echo "All tests passed."
+      - name: Execute Tests
+        run: |
+          echo "Executing tests..."
+          echo "All tests passed."
 # ===========================================================================
 # SECURITY SCAN JOB
 # Runs after tests finish successfully
 # Skips execution when workflow is manually triggered
 # ===========================================================================
-security-scan:
-name: Security Scan
-runs-on: ubuntu-latest
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
 # Depends on test job
-needs: test
+    needs: test
 
 # Conditional execution
-if: github.event_name != 'workflow_dispatch'
-steps:
+    if: github.event_name != 'workflow_dispatch'
+    steps:
 # Checkout repository
-- name: Checkout Repository
-uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 # Simulated security scan
-
-- name: Run Security Scan
-run: |
-echo "Scanning source code..."
-echo "No vulnerabilities detected."
-
+      - name: Run Security Scan
+        run: |
+          echo "Scanning source code..."
+          echo "No vulnerabilities detected."
 # ===========================================================================
 # REUSABLE WORKFLOW EXAMPLE
 # Demonstrates the 'uses' keyword at JOB level
@@ -136,23 +126,23 @@ echo "No vulnerabilities detected."
 # Replace owner/repository/workflow with a real reusable workflow
 # before using in production.
 # ===========================================================================
-reusable-workflow-demo:
+  reusable-workflow-demo:
 
-name: Call Reusable Workflow
+    name: Call Reusable Workflow
 
 # Wait until tests complete
-needs: test
+    needs: test
 
 # Execute only on main branch
-if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
 
 # Calls another workflow instead of defining steps
-uses: my-org/shared-workflows/.github/workflows/deploy.yml@main
+    uses: ./.github/workflows/demo.yml
 
 # Pass parameters to reusable workflow
-with:
-environment: production
-app-name: sample-app
+    with:
+      environment: production
+      app-name: sample-app
 
 # Pass repository secrets to called workflow
-secrets: inherit
+    secrets: inherit
