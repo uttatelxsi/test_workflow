@@ -1,0 +1,26 @@
+name: Test Self-Hosted Windows Runner
+
+on:
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+
+jobs:
+  test-runner:
+  # Target your self-hosted runner using its default labels and runner name
+    runs-on: [self-hosted, windows, x64, "29832-438562"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Print system details
+        shell: powershell
+        run: |   
+          Write-Host "Runner OS Details:" 
+          Get-ComputerInfo | Select-Object OsName, OsVersion, OsArchitecture
+          Write-Host "Current Directory: $pwd"
+          Write-Host "User: $env:USERNAME"
+
+      - name: Test PowerShell Execution
+        shell: powershell
+        run: |
+          Write-Host "Successfully connected and executed PowerShell on runner 29832-438562!"
