@@ -30,7 +30,8 @@ jobs:
       - name: Print system details
         shell: powershell
         run: |
-          Write-Host "Hello World"
+          echo "Hello World"
+          echo "Runner 29832-438562 self-hosted Windows X64"
      
       - name: Test PowerShell Execution
         shell: powershell
