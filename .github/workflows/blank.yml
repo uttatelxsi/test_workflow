@@ -30,10 +30,7 @@ jobs:
       - name: Print system details
         shell: powershell
         run: |
-          Write-Host "Runner OS Details:"
-          Get-ComputerInfo | Select-Object OsName, OsVersion, OsArchitecture
-          Write-Host "Current Directory: $pwd"
-          Write-Host "User: $env:USERNAME"
+          Write-Host "Hello World"
      
       - name: Test PowerShell Execution
         shell: powershell
