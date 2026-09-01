@@ -10,17 +10,17 @@ jobs:
 
     steps:
       - name: Check out repository
-				uses: actions/checkout@v4
+        uses: actions/checkout@v4
 				
-			- name: Print system details
-				shell: powershell
-				run: |   
-    			Write-Host "Runner OS Details:" 
+      - name: Print system details
+        shell: powershell
+        run: |   
+          Write-Host "Runner OS Details:" 
           Get-ComputerInfo | Select-Object OsName, OsVersion, OsArchitecture
-          Write-Host "Current Directory: $pwd"
-          Write-Host "User: $env:USERNAME"
-
-      - name: Test PowerShell Execution
-        shell: powershell
-        run: |
+          Write-Host "Current Directory: $pwd"
+          Write-Host "User: $env:USERNAME"
+      
+      - name: Test PowerShell Execution
+        shell: powershell
+        run: |
           Write-Host "Successfully connected and executed PowerShell on runner 29832-438562!"
