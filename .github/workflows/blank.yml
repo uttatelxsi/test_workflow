@@ -23,17 +23,20 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: checkoutrepository
-        uses: actions/checkout@v4
+      #- name: checkoutrepository
+       # uses: actions/checkout@v4
 
       # Runs a single command using the runners shell
       - name: Print system details
-        shell: powershell
+        shell: cmd
         run: |
           echo "Hello World"
           echo "Runner 29832-438562 self-hosted Windows X64"
      
       - name: Test PowerShell Execution
-        shell: powershell
+        shell: cmd
         run: |
-          Write-Host "Successfully connected and executed PowerShell on runner 29832-438562!"
+          hostname
+          echo %COMPUTERNAME%
+          echo %PROCESSOR_ARCHITECTURE%
+          
